@@ -1,5 +1,6 @@
 #include "scene.hpp"
 
+#include "camera.hpp"
 #include "render_system.hpp"
 
 #define GLM_FORCE_RADIANS
@@ -20,12 +21,17 @@ namespace engine {
 
     void Scene::run() {
         RenderSystem renderSystem{ device, renderer.getSwapChainRenderPass() };
+        Camera camera{};
 
         while (!window.shouldClose()) {
             glfwPollEvents();
+            float aspect = renderer.getAspectRatio();
+            //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
+
             if (auto commandBuffer = renderer.beginFrame()) {
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                renderSystem.renderGameObjects(commandBuffer, gameObjects);
+                renderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }
@@ -97,7 +103,7 @@ namespace engine {
 
         auto cube = GameObject::createGameObject();
         cube.model = model;
-        cube.transform.translation = { .0f, .0f, .5f };
+        cube.transform.translation = { .0f, .0f, 2.5f };
         cube.transform.scale = { .5f, .5f, .5f };
         gameObjects.push_back(std::move(cube));
     }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "camera.hpp"
 #include "device.hpp"
 #include "pipeline.hpp"
 #include "game_object.hpp"
@@ -18,7 +19,7 @@ namespace engine {
 
 		RenderSystem(const RenderSystem&) = delete;
 		RenderSystem& operator=(const RenderSystem&) = delete;
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> & gameObjects);
+		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> & gameObjects, const Camera& camera);
 
 	private:
 		void createPipelineLayout();
